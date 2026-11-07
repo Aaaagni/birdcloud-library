@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鸟类报告-BirdCloud.Library 鸟云图书馆</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="logo">🐦📚 BirdCloud.Library 鸟云图书馆</div>
+        <nav>
+            <a href="birds.html" class="active">今日鸟档案</a>
+            <a href="index.html">推荐书单</a>
+            <a href="science.html">科普专栏</a>
+        </nav>
+    </header>
+
+    <!-- 主横幅 -->
+    <section class="banner">
+        <h1>📖 鸟类档案</h1>
+        <p>顶部每日随机认识一种鸟（附图详解，可换一只）；下方为全部 16 种完整档案，点击卡片展开详情</p>
+    </section>
+
+    <!-- 今日随机鸟档案（每次随机一只，可换一只） -->
+    <section class="today-bird">
+        <div class="tb-head">
+            <h2>🐦 今日鸟档案</h2>
+            <span class="tb-sub">每次刷新随机认识一位鸟类朋友 · 详细介绍它的食性、家园与趣事</span>
+            <button id="tb-again" class="tb-again" type="button">🎲 换一只</button>
+        </div>
+        <div class="tb-card" id="tb-card"></div>
+    </section>
+
+    <main class="container wide">
+        <div class="cat-tabs report-tabs" id="report-tabs"></div>
+        <div class="report-grid" id="report-grid"></div>
+    </main>
+
+    <footer>
+        <p>BirdCloud.Library 鸟云图书馆 © 2026</p>
+    </footer>
+
+    <script src="china-outline.js"></script>
+    <script>
+    (function () {
+
+        function esc(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+        }
+
+        // ---------- 鸟类报告数据 ----------
+                var BIRDS = [
+            // ==================== 常见鸟类 ====================
+            { group: "常见", name: "麻雀（树麻雀）", sci: "Passer montanus", emoji: "🐦", level: "三有", img: "images/birds/sparrow.jpg", rangeMap: ["东北","华北","华东","华中","华南","西南","西北"], intro: "屋檐下最常见的邻居，成群结队，机警灵活。", diet: "杂食偏植食：稻麦粟等谷物、杂草种子与浆果为主，繁殖期大量捕食蚜虫、蛾类幼虫、象甲等昆虫喂养雏鸟，秋冬还啄食昆虫越冬卵与蛹。", feed: "地面集群啄食，边啄边抬头警戒；也善于在枝头、屋檐倒挂取食，秋季常将种子藏入缝隙留待冬天。", habitat: "城乡人居区、农田、村落、灌丛与疏林；营巢于屋檐缝隙、墙洞、树洞、空调外机夹缝，紧贴人类生活圈。", range: "中国全境（含台湾、海南）广布，平原丘陵常见，海拔多在 2500 米以下，是最常见鸟类之一。", sex: "雌雄羽色几乎相同：雄鸟头顶与喉部黑斑略大而深、体色稍鲜明，野外难以分辨。", breed: "繁殖期 4—7 月，一年 2—3 窝；巢筑于房檐墙洞，每窝 4—6 枚灰白带斑卵，雌鸟孵化约 12—14 天，双亲共同育雏约 15 天。", molt: "每年换羽两次：2—3 月繁殖前部分换羽、7—9 月繁殖后完全换羽；新羽灰褐、羽缘浅淡，入秋后羽色更鲜亮，幼鸟约 2 月龄完成首次换羽。", behavior: "常结成几十只的大群活动，夜宿树冠、竹林或屋檐下；冬季有聚集取暖与沙浴、泥浴清洁羽毛的习性。", extra: "雏鸟离巢后仍由亲鸟喂食数日；极度适应人居，是城市生态系统的重要一环。" },
+            { group: "常见", name: "喜鹊", sci: "Pica pica", emoji: "🪺", level: "三有", img: "images/birds/magpie.jpg", rangeMap: ["东北","华北","华东","华中","华南","西南","西北"], intro: "黑白相间、长尾闪光，城乡村头常见的“报喜鸟”。", diet: "杂食机会主义者：昆虫（蝗虫、金龟子）、谷物果实、小型鼠类、蛙类与动物尸体，冬季也翻拣人类食物碎屑。", feed: "地面行走觅食为主，长尾助保持平衡；善用喙翻动落叶、扒开浅层泥土寻找虫卵与蛹。", habitat: "平原、城市绿地、乡村林缘、田野与河岸疏林，偏好开阔地附近的高大树木与电塔。", range: "全国广布（青藏高原高海拔山区较少），城市与乡村均极常见。", sex: "雌雄羽色一致，雄鸟体型略大、尾羽更长，野外需对比才可分辨。", breed: "繁殖期 2—5 月，一年 1 窝；筑大型球形枝巢于高树或电塔，巢有顶盖、侧开入口，每窝 4—6 枚蓝绿带斑卵，孵化约 17—18 天。", molt: "繁殖后 6—8 月进行一次完全换羽，旧羽脱落较快，换羽期飞行能力下降、多隐于树冠活动；尾羽同步更换。", behavior: "巢极坚固，常连续多年使用并逐年加高；性机警，有储藏食物过冬的习惯；叫声响亮，“喳喳”声四季可闻。", extra: "在中国传统文化中是报喜之鸟；会收集亮片等杂物装饰巢，聪明且记忆良好。" },
+            { group: "常见", name: "乌鸫", sci: "Turdus mandarinus", emoji: "🖤", level: "三有", img: "images/birds/blackbird.jpg", rangeMap: ["华北","华东","华中","华南","西南"], intro: "一身乌黑、黄眼圈黄嘴的“百舌鸟”，清晨鸣唱婉转。", diet: "杂食：蚯蚓、昆虫（甲虫、蝶蛾幼虫）为主，秋季大量取食浆果果实，也吃蜗牛与小型无脊椎动物。", feed: "偏爱在地面跳跃式觅食，用喙掀翻落叶、扒开松土“翻叶寻虫”；啄到蚯蚓常拖拽拔出再吞食。", habitat: "城市公园、庭院、林地灌丛与农田林网，常在地面活动，也在草坪与花坛间踱步。", range: "中国中东部、华南广布，北方种群冬季南迁至长江流域，近年来有向更高纬度扩散的趋势。", sex: "雄鸟通体黑色、黄嘴黄眼圈；雌鸟体羽偏褐、嘴色暗褐，辨识明显。", breed: "繁殖期 3—7 月，一年 2—3 窝；杯状泥草巢筑于树杈或灌丛，每窝 4—5 枚蓝绿色带斑卵，孵化约 12—14 天，双亲育雏。", molt: "7—9 月完全换羽一次，换羽后雄鸟体羽油亮乌黑、黄嘴在换羽期略变暗、秋季恢复鲜黄。", behavior: "鸣声丰富婉转，擅长模仿其他鸟叫、甚至手机铃声，故称“百舌”；清晨与黄昏鸣唱最盛，雨天也常高歌。", extra: "领地意识强，会追逐入侵的猫与猛禽；春季求偶时雄鸟立于高处炫耀歌喉。" },
+            { group: "常见", name: "白头鹎", sci: "Pycnonotus sinensis", emoji: "👴", level: "三有", img: "images/birds/bulbul.jpg", rangeMap: ["华东","华中","华南","西南"], intro: "头顶一撮白枕斑，俗称“白头翁”，公园枝头常见。", diet: "杂食：昆虫（蛾、蝶、蝗虫）与果实、花蜜兼食；繁殖期偏动物性食物，秋冬大量取食浆果与种子。", feed: "在枝头、花丛与地面间跳跃觅食，啄食浆果常连皮带肉吞下；也悬停或探身啄取花朵上的蜜露与昆虫。", habitat: "林地、灌丛、公园、城市绿化带与果园，性活泼喜集群，几乎有树有花即有它的身影。", range: "长江流域及其以南广布（含台湾、海南），近年有向华北、东北扩散趋势，是城市最常见鸟之一。", sex: "雌雄羽色相似，仅体型略有差异，野外难以分辨。", breed: "繁殖期 4—8 月，一年 2 窝；杯状巢筑于灌木或小树树杈，以草茎蛛丝缠绕，每窝 3—5 枚粉红带斑卵，孵化约 12—13 天。", molt: "繁殖后 7—10 月完全换羽，枕部白斑换羽期依然清晰；冬季绒羽增厚以御寒。", behavior: "冬季常与红耳鹎等混群活动，叫声多变；清晨常在树梢“吱吱”对唱，警戒时发出急促颤音。", extra: "名字源于脑后醒目的白色枕斑，仿佛“白头翁”；善于在城市绿化带中快速适应。" },
+            { group: "常见", name: "珠颈斑鸠", sci: "Streptopelia chinensis", emoji: "🕊️", level: "三有", img: "images/birds/dove.jpg", rangeMap: ["华北","华东","华中","华南"], intro: "颈侧珍珠状黑底白斑，城市里“咕咕”叫的常客。", diet: "植食为主：谷物、草籽、浆果与嫩芽，偶食昆虫；饮水频繁，偏爱开阔取食地。", feed: "地面漫步啄食，边走边点头；砂囊粗厚，常啄食小石子帮助磨碎谷粒。", habitat: "城市公园、行道树、农田村落与林缘，常在地面或屋顶活动，高度适应人居。", range: "中国东部、中部、南部广布，北方有部分种群冬季南迁，近年分布持续扩大。", sex: "雌雄相似：雄鸟颈斑略大而鲜明、体型略大，求偶时俯冲飞行更频繁。", breed: "繁殖期几乎全年（3—11 月），一年 2—4 窝；巢极简陋（几根树枝搭成），常筑于枝杈或空调外机下，每窝 2 枚纯白卵，孵化约 14—16 天。", molt: "全年缓慢换羽，主翼羽分阶段逐根更替以维持飞行能力，无明显换羽季；幼鸟 3—4 月龄完成首次换羽后出现颈斑。", behavior: "叫声低沉悠长“咕咕-咕”，清晨最常闻；飞行直快带哨声，落枝时习惯短暂停驻观察。", extra: "亲鸟以“鸽乳”（嗉囊分泌的乳状物）哺育雏鸟约一周，这在鸟类中很独特。" },
+            { group: "常见", name: "家燕", sci: "Hirundo rustica", emoji: "✂️", level: "三有", img: "images/birds/swallow.jpg", rangeMap: ["东北","华北","华东","华中","华南","西南","西北"], intro: "剪刀尾、红喉，衔泥筑巢屋檐下的夏候鸟。", diet: "纯食虫：空中捕食蚊、蝇、蛾、甲虫等飞虫，一窝雏鸟一天可被喂食数百只昆虫。", feed: "低空快速盘旋飞行，张开大口在空中“兜”飞虫；常贴着水面、农田低飞，捕食被惊起的昆虫。", habitat: "农田、村落、城镇上空与屋檐、桥下，喜开阔空域，几乎不在密林中活动。", range: "春夏遍布全国（含台湾、海南），秋季集群迁往东南亚、南亚越冬，迁徙距离可达上万公里。", sex: "雌雄相似：雄鸟尾羽更长、喉部栗红色更深，飞行时尾羽的“剪刀”感更明显。", breed: "繁殖期 4—8 月，一年 1—2 窝；泥巢筑于屋檐或桥下横梁，内垫羽毛草茎，每窝 4—6 枚白带棕斑卵，孵化约 14—15 天。", molt: "繁殖后 8—9 月换羽，多在迁往越冬地的途中完成；换羽后剪尾更修长，幼鸟当年秋季换第一次羽。", behavior: "秋季集群迁徙，常上万只夜宿芦苇丛或电线；飞行轻捷，转弯敏捷，鸣声细碎清脆。", extra: "古称“玄鸟”，被视为报春之鸟；巢址多年沿用，雏鸟出壳后约 20 天学会飞行。" },
+            { group: "常见", name: "大山雀（远东山雀）", sci: "Parus cinereus", emoji: "🎩", level: "三有", img: "images/birds/great-tit.jpg", rangeMap: ["东北","华北","华东","华中","华南","西南"], intro: "黑头白颊、黄肚皮，会倒挂觅食的小能手。", diet: "食虫为主：毛虫、蛾蝶、蜘蛛、象甲等，一只繁殖期亲鸟一天可捉数百条害虫；冬季兼食种子、坚果与浆果。", feed: "极灵活的攀枝高手：常在枝梢倒挂、悬垂觅食，用喙撬开树皮缝隙找虫卵与蛹；也取食人类投放的瓜子、花生。", habitat: "阔叶林、混交林、果园、公园与庭院，从平原到海拔 3000 米以上山地均有分布。", range: "中国大部广布（除极西北），北方种群冬季南迁，是分布最广的山雀之一。", sex: "雌雄相似：雄鸟腹部中央黑色纵带更宽更深，喉部黑斑更大，其余难以分辨。", breed: "繁殖期 3—6 月，一年 1—2 窝；营巢于树洞、墙缝或人工巢箱，以苔藓兽毛铺垫，每窝 6—12 枚白带红斑卵，孵化约 13—14 天。", molt: "8—10 月完全换羽一次，换羽后腹部黄色加深；幼鸟离巢后即开始换羽，约 1 个月完成。", behavior: "冬季常加入混合鸟群（与山雀、柳莺等）共同巡游觅食；叫声多变，“叽啾”与“警警”声辨识度高。", extra: "一窝雏鸟能吃掉大量害虫，是著名的农林益鸟；会观察取食经验并相互学习。" },
+            { group: "常见", name: "白鹡鸰", sci: "Motacilla alba", emoji: "🎢", level: "三有", img: "images/birds/wagtail.jpg", rangeMap: ["东北","华北","华东","华中","华南","西南"], intro: "黑白相间、长尾不停上下摆动，贴着水面和地面奔跑。", diet: "食虫：蝇、蚊、小甲虫、蜻蜓若虫等，偶食草籽；常在潮湿地面与水边捕食。", feed: "地面快速奔走啄食，长尾上下摆动保持平衡；飞行呈波浪状，边飞边“唧-唧令”鸣叫，常沿水面低掠。", habitat: "河岸、湿地、农田、村落与城市广场、屋顶，喜欢开阔、近水且有裸地的地方。", range: "全国广布，北方种群冬季南迁，长江以南多为留鸟。", sex: "雄鸟黑色部分更深更亮（背黑、喉黑），雌鸟偏灰，繁殖期差异略明显。", breed: "繁殖期 4—7 月，一年 1—2 窝；巢筑于地面草丛、墙缝、桥洞或屋檐下，以草茎羽毛筑成，每窝 4—6 枚灰白带斑卵。", molt: "7—9 月换羽一次，冬羽灰调更重；雄鸟繁殖前春季部分换羽，使黑背、黑喉在繁殖期更深亮；尾羽逐根更换。", behavior: "行走时尾羽如钟摆不停上下摆动；喜欢站在屋顶、电线或牛背上，见人飞近便一纵一纵飞走。", extra: "因尾羽摆动而得名“点水雀/白脸鸰”；常与牛群、翻耕农田相伴捡食惊出的昆虫。" },
+            { group: "常见", name: "戴胜", sci: "Upupa epops", emoji: "👑", level: "三有", img: "images/birds/hoopoe.jpg", rangeMap: ["华北","华东","华中","华南","西南","西北"], intro: "头戴扇状冠羽、长嘴细弯，田园里翻土觅虫的“花蒲扇”。", diet: "食虫为主：蝼蛄、金龟子幼虫、蝗虫、蛾蝶幼虫与蠕虫；用长喙探入土中衔出地下害虫。", feed: "地面踱步寻食，长喙垂直插入松土与粪堆中“探宝”，常随耕地翻犁捡食；受惊时冠羽瞬间展开如扇。", habitat: "开阔田野、果园、林缘草地与村落边缘，偏好疏松土壤与短草地带，常在树洞、墙洞营巢。", range: "欧亚大陆广布；中国除高原腹地外几乎全域可见，华北、华中常见夏候鸟，南方部分地区留鸟。", sex: "雌雄羽色几乎相同，雄鸟体型略大、冠羽略长，野外难以分辨。", breed: "繁殖期 4—6 月，一年 1 窝；巢筑于树洞、墙洞或石缝，雌鸟产 5—8 枚卵并独自孵化约 16—18 天，育雏期巢内气味浓烈以驱天敌。", molt: "6—8 月繁殖结束后完全换羽一次，新羽斑纹更清晰；扇形冠羽同步更替，换羽后冠羽最鲜亮。", behavior: "独栖或成对活动，飞行呈波浪状；受惊时常原地竖冠“定型”借羽毛拟态隐蔽。", extra: "育雏期雌鸟会分泌恶臭油状物涂在巢口，故俗称“臭姑姑”；叫声“呼-呼-呼”三音节低沉悠远。" },
+            { group: "常见", name: "普通翠鸟", sci: "Alcedo atthis", emoji: "💙", level: "三有", img: "images/birds/kingfisher.jpg", rangeMap: ["华北","华东","华中","华南","西南"], intro: "翠蓝背橙红腹的小精灵，水面悬停扎水的“钓鱼郎”。", diet: "纯肉食鱼鲜：小型鱼虾、水生昆虫与蝌蚪；捕到小鱼常先在枝头摔打再吞食。", feed: "停栖岸边枝头或空中悬停锁定目标，猛然扎入水中衔鱼出水，成功率极高；雏鸟期一天需喂食数十条小鱼。", habitat: "清澈溪流、池塘、湖泊与河渠岸边，偏好缓流与茂密岸植，营巢于岸边土崖掘出的深洞。", range: "欧亚大陆、东南亚至大洋洲广布；中国东部、中部、南部水域常见，北方夏季繁殖、南方全年可见。", sex: "雌雄相似：雄鸟嘴全黑，雌鸟下嘴基部橙红色，是野外最可靠的辨别点。", breed: "繁殖期 4—7 月，一年 1—2 窝；雌雄合作在土崖掘洞筑巢（洞深可达 1 米），每窝 5—7 枚白卵，孵化约 19—21 天。", molt: "9—11 月换羽一次，换羽后背部翠蓝与橙腹更鲜艳；幼鸟首换后羽色转亮、嘴色渐深。", behavior: "常静立水边久等，见鱼即闪电入水；飞行低而直、速度快，掠过水面时反射出蓝色闪光。", extra: "鸣声尖锐的“唧”声，飞行时如蓝色箭矢；对水质敏感，是清洁河溪的指示物种。" },
+            { group: "常见", name: "画眉", sci: "Garrulax canorus", emoji: "🎵", level: "国家二级", img: "images/birds/hwamei.jpg", rangeMap: ["华东","华中","华南","西南"], intro: "白眼圈、黄眼圈，鸣声婉转多变，中国著名的笼养鸣禽。", diet: "杂食：昆虫（蝗虫、蛾类、甲虫）与浆果、种子兼食，也啄食蚯蚓与小型无脊椎动物。", feed: "林下地面与灌丛间跳跃觅食，用爪刨开落叶层找虫；也上树啄食浆果，常边觅食边鸣唱。", habitat: "低山丘陵的灌丛、竹林、林缘与疏林，偏好茂密灌丛与次生林，海拔多在 2500 米以下。", range: "中国南方特有种：长江以南各省常见，也见于越南北部；近年受非法笼养贸易影响数量下降。", sex: "雌雄羽色几乎相同，仅雄鸟体型略大、鸣声更婉转复杂，野外难以靠羽色分辨。", breed: "繁殖期 4—7 月，一年 1—2 窝；杯状巢筑于灌丛深处或竹丛，每窝 3—5 枚蓝绿带斑卵，孵化约 14—15 天。", molt: "7—9 月完全换羽一次，换羽期鸣唱减少、多藏匿林下；新羽黄褐偏暖，眼圈白纹更清晰。", behavior: "性机警胆小，善隐蔽；鸣声高亢婉转、富于变化，清晨与傍晚鸣唱最盛，素有“林中歌手”之称。", extra: "因鸣声优美长期遭大规模捕捉，现列为国家二级保护动物；野鸟笼养交易是其最大威胁。" },
+            { group: "常见", name: "红嘴蓝鹊", sci: "Urocissa erythroryncha", emoji: "🪶", level: "三有", img: "images/birds/red-billed-blue-magpie.jpg", rangeMap: ["华北","华东","华中","华南","西南","西北"], intro: "红嘴红爪、蓝衣长尾，山林里喧闹优雅的“长尾蓝鹊”。", diet: "杂食：昆虫、果实、种子、小型爬行与两栖动物，也捕食其他鸟的卵与雏鸟，秋冬以橡果坚果为主。", feed: "树冠与地面皆可觅食：枝头啄果、地面翻叶，也集群围猎昆虫；常将多余食物藏于树皮缝隙。", habitat: "山地阔叶林、混交林、果园与公园林地，从平原到海拔 2500 米均有，偏好林木茂密处。", range: "中国中东部、西南部广布，也见于中南半岛；华北山地与江南丘陵均常见。", sex: "雌雄羽色几乎相同，雄鸟体型略大、尾羽更长，野外难以分辨。", breed: "繁殖期 4—7 月，一年 1 窝；筑盘状巢于高树杈，每窝 3—6 枚带斑卵，孵化约 18—19 天，双亲育雏，幼鸟出巢后仍受群照顾。", molt: "6—8 月换羽，长尾羽逐根更替，换羽期飞行略显笨拙，常结群在林中低飞活动。", behavior: "性喧闹活泼，常三五只或数十只结群在林间穿梭，鸣声粗哑多变；遇猛禽会集群驱赶。", extra: "长尾可达体长近两倍，飞行时如飘带；聪明胆大，有“山林精灵”之称。" },
+            { group: "常见", name: "北红尾鸲", sci: "Phoenicurus auroreus", emoji: "🍊", level: "三有", img: "images/birds/daurian-redstart.jpg", rangeMap: ["东北","华北","华东","华中","西南","西北"], intro: "橙红尾黑背白斑，林缘枝头频繁摆尾的“小火焰”。", diet: "食虫为主：蛾类幼虫、甲虫、蚊蝇与蜘蛛，秋冬兼食少量浆果与草籽。", feed: "枝头与地面交替觅食：落至地面啄虫后飞回枝头，尾羽不停上下摆动；也低空掠捕飞虫。", habitat: "林缘、疏林、农田边、村落与公园，偏好有开阔地的低矮灌丛与篱墙。", range: "中国北方繁殖、长江以南越冬（候鸟）；也见于西伯利亚、朝鲜半岛，迁徙季节南北可见。", sex: "雄鸟头顶灰白、背黑翅白斑、腹橙红，雌鸟整体灰褐、仅尾羽橙红，差异明显。", breed: "繁殖期 4—7 月，一年 1—2 窝；巢筑于墙洞、石缝、树洞或屋檐下，每窝 4—6 枚卵，孵化约 12—13 天。", molt: "8—10 月换羽，冬羽灰调更重、尾橙红全年醒目；雄鸟春季繁殖前部分换羽，黑背更乌亮。", behavior: "尾羽频繁上下摆动是其标志动作；性大胆，常出现在人类活动区附近，鸣声清亮的“笛-笛-笛”。", extra: "因频繁摆尾又称“点尾雀”；秋冬季常在路边电线与灌木间跳跃，是迁徙季节的常见旅鸟。" },
+            { group: "常见", name: "欧亚鸲（知更鸟）", sci: "Erithacus rubecula", emoji: "🧡", level: "无危(LC)", img: "images/birds/european-robin.jpg", rangeMap: [], intro: "红胸褐背，欧洲庭院里的“圣诞小鸟”，歌声婉转。", diet: "杂食：昆虫、蚯蚓、蜘蛛与浆果；花园翻土时常紧随其后捡食蚯蚓与幼虫。", feed: "地面跳跃觅食，低头啄开落叶层找虫；也停栖枝头伏击飞虫，秋冬以浆果补充能量。", habitat: "林地、灌丛、公园与庭院，偏好有灌木与矮篱的开阔环境，冬季也会接近人类屋舍。", range: "欧洲、北非与西亚广布，部分种群冬季南迁；中国无自然分布，偶见笼养逃逸个体。", sex: "雌雄羽色几乎相同，红胸大小与色调略异；主要靠行为与体型区分，野外难以一眼辨雌雄。", breed: "繁殖期 3—7 月，一年 1—2 窝；杯状苔藓巢筑于树洞、墙缝或灌丛，每窝 4—6 枚带斑卵，孵化约 12—14 天。", molt: "7—9 月换羽，成鸟红胸换羽后依然鲜艳；幼鸟第一年胸部棕褐斑驳、翌年换羽后才出现红胸。", behavior: "清晨与黄昏鸣唱婉转，冬季也照常歌唱，被誉为“冬日的歌唱家”；领地性强，会驱逐入侵者。", extra: "欧洲最受喜爱的鸟类之一，常被印在圣诞贺卡上；在英伦文化中象征温暖与希望。" },
+            { group: "常见", name: "蓝山雀", sci: "Cyanistes caeruleus", emoji: "💛", level: "无危(LC)", img: "images/birds/eurasian-blue-tit.jpg", rangeMap: ["西北"], intro: "蓝冠黄腹、脸颊白，欧洲最活泼可爱的庭园小山雀。", diet: "食虫为主：蚜虫、毛毛虫、蜘蛛等，繁殖期极依赖毛虫；秋冬兼食种子、坚果与脂肪性食物。", feed: "灵巧的枝头杂技家：常倒挂、悬垂啄食枝梢芽虫；也啄开坚果，秋冬会排队取食人类挂出的油脂球。", habitat: "阔叶林、果园、公园与庭院，偏好有老树的林地，也在人工巢箱安家。", range: "欧洲至中亚广布，西伯利亚南部也有分布；中国新疆西北部边缘有记录，其余地区无自然分布。", sex: "雌雄羽色几乎相同，雄鸟蓝冠与黄腹略鲜艳、体型稍大，野外难以分辨。", breed: "繁殖期 4—6 月，一年 1 窝；巢筑于树洞或巢箱，每窝 6—12 枚白带红斑卵，孵化约 13—15 天，育雏期亲鸟每天喂食数百只毛虫。", molt: "8—10 月换羽，换羽后蓝冠更亮；幼鸟首次换羽后才出现标志性的蓝冠。", behavior: "性活泼好动，常组成小群或混群活动；鸣声细碎清脆，秋冬会拉开声争夺取食点。", extra: "繁殖期以惊人的毛虫消费量著称，是森林害虫的重要“天敌”；聪明，会打开瓶盖取食。" },
+            { group: "常见", name: "绿头鸭", sci: "Anas platyrhynchos", emoji: "🦆", level: "三有", img: "images/birds/mallard.jpg", rangeMap: ["东北","华北","华东","华中","华南","西南","西北"], intro: "雄绿头雌麻褐，城市公园湖面最常见的野鸭。", diet: "杂食：水生植物、藻类、草籽、谷物与小鱼虾蟹，也吃昆虫与软体动物。", feed: "浅水区“倒栽葱”式探水觅食，翘尾低头捞食水草；也在地面踱步啄食草籽，冬季大量取食落谷。", habitat: "湖泊、河流、水库、湿地与城市公园水域，偏好浅水与岸生植物，高度适应人居水岸。", range: "北半球广布，中国南北水域全年可见，是最常见、分布最广的野鸭；城市公园亦常见。", sex: "雄鸟头颈亮绿色金属光泽、嘴黄、胸栗褐；雌鸟通体麻褐色、嘴橙褐带暗斑，差异明显。", breed: "繁殖期 3—7 月，一年 1 窝；巢筑于水边草丛或树洞，每窝 8—12 枚卵，雌鸟独自孵化约 26—28 天，雏鸟出壳即随母下水。", molt: "7—9 月换羽，雄鸟换羽后进入“蚀羽期”外观酷似雌鸟（保护色）；9—12 月换回鲜艳繁殖羽，飞羽同步更换期间短暂丧失飞行能力。", behavior: "常成对或结群活动，迁徙季节大群编队飞行；雌鸟带雏成群“排队游湖”，警觉时伸长脖颈观察。", extra: "家鸭的祖先；全球数量数千万只，是研究最透彻的野鸭，也是城市湿地常见“居民”。" },
+            // ==================== 珍稀鸟类 ====================
+            { group: "珍稀", name: "朱鹮", sci: "Nipponia nippon", emoji: "🌸", level: "国家一级", img: "images/birds/crested-ibis.jpg", rangeMap: ["西北","华中","华东"], intro: "东方宝石，曾野外灭绝，靠中国人工繁育起死回生的旗舰物种。", diet: "肉食为主：泥鳅、小鱼、青蛙、螃蟹、蝗虫与软体动物；在浅水水田、溪流与沼泽觅食，偶食植物嫩芽。", feed: "在浅水区以长喙探入泥中“扫探”猎物，边走边左右摆动喙；也跟随耕牛翻地啄食惊出的泥鳅与昆虫。", habitat: "低山丘陵的水田、溪流、水库与湿地，夜栖与营巢于高大松树、栎树，巢区远离人烟。", range: "以陕西洋县为中心，现扩散至陕西、河南、浙江、山东等地，野外种群已超过 6000 只。", sex: "雌雄羽色相似：繁殖期成鸟以颈部分泌物涂抹羽毛呈灰黑色（婚羽），雄鸟体型略大、喙稍长。", breed: "繁殖期 2—6 月；大树高处营巢，每窝 2—3 枚蓝灰带斑卵，双亲轮流孵化约 28 天，育雏约 40 天，雏鸟 3—4 岁性成熟。", molt: "繁殖期以分泌物涂羽呈灰黑“婚羽”，繁殖结束后 7—9 月换羽恢复洁白；换羽后羽色纯净如雪。", behavior: "繁殖期常成对活动，非繁殖季三五成群在水田巡食；性格温和安静，飞行时双翼扇动缓慢优雅。", extra: "全球首例“野外灭绝后人工繁育再野放”的典范，被誉为“东方宝石”，2021 年后在多地成功野化放归。" },
+            { group: "珍稀", name: "丹顶鹤", sci: "Grus japonensis", emoji: "🦩", level: "国家一级", img: "images/birds/red-crown-crane.jpg", rangeMap: ["东北","华东"], intro: "头顶朱红、仙风道骨的“仙鹤”，东亚湿地旗舰物种。", diet: "杂食：鱼虾、软体动物、芦苇根茎、嫩芽与谷物；越冬地偏好浅水中的螺类与植物根茎。", feed: "以长喙在浅水与泥滩中啄取，边走边探；也低头啄食芦苇丛中的种子，取食时脖颈弯成优美弧度。", habitat: "芦苇沼泽、浅水湿地与滩涂，繁殖于三江平原与松嫩平原的淡水沼泽，越冬于江苏盐城滩涂。", range: "繁殖于黑龙江扎龙、吉林向海、辽宁盘锦等地，越冬于江苏盐城、山东黄河三角洲，迁徙路线贯穿东北亚。", sex: "雌雄相似：雄鹤体型略大、鸣声更低，主要靠求偶“对舞”与叫声区分。", breed: "繁殖期 3—6 月；求偶时引颈长鸣、振翅对舞，巢筑于浅水草墩，每窝 2 枚卵，孵化约 31 天，双亲轮流孵化与育雏。", molt: "夏末 8—10 月换羽，飞羽同步脱落、换羽期短暂失去飞行能力，多隐蔽于湿地深处；头顶朱红区无羽毛覆盖，常年醒目。", behavior: "著名的“舞蹈家”：求偶与庆祝时跳起复杂的对舞（点头、蹦跳、展翅、甩头）；迁徙呈“人”字形队列，鸣声高亢传数里。", extra: "全球种群约 1.4 万只，盐城为中国最大越冬地；在中国文化中象征长寿与忠贞，是“鹤唳九天”的化身。" },
+            { group: "珍稀", name: "中华秋沙鸭", sci: "Mergus squamatus", emoji: "🦆", level: "国家一级", img: "images/birds/scaly-sided-merganser.jpg", rangeMap: ["东北","华东","华中","华南"], intro: "头后有冠羽、两胁鳞状斑纹，最珍稀的秋沙鸭，中国繁殖特有。", diet: "食鱼为主：小型鱼类、虾蟹与水生昆虫；幼鸭期兼食水生昆虫幼虫，是典型的“水下猎手”。", feed: "潜水捕食：从水面一个猛子扎入水中追捕鱼群，单次潜水可达数十秒，视力与定位能力极强。", habitat: "水质清澈、鱼虾丰美的山地溪流与河流，几乎只在人迹罕至的洁净水域出现，是水质指示物种。", range: "繁殖于长白山、小兴安岭等东北山地林区溪流，越冬于长江中下游、鄱阳湖及东南沿海。", sex: "雄鸟头黑绿色带冠羽、两胁黑白鳞状斑纹；雌鸟头棕栗色、体灰褐，差异明显。", breed: "繁殖期 4—6 月；利用天然树洞营巢（离地数米），每窝 8—12 枚卵，雏鸟出壳 24 小时内从树洞跳落入水随母觅食。", molt: "7—9 月换羽，雄鸟换羽后进入“蚀羽期”、外观近似雌鸟；冬末换回黑白鳞纹繁殖羽，冠羽同步更替。", behavior: "多在清晨与黄昏活动；常成对或小群在溪流中顺流觅食，警惕性极高，遇干扰即潜水或飞离。", extra: "全球种群仅约 3000—4000 只，树洞营巢习性使老龄阔叶林保护尤为关键，被誉为“鸟类大熊猫”。" },
+            { group: "珍稀", name: "黄腹角雉", sci: "Tragopan caboti", emoji: "🦚", level: "国家一级", img: "images/birds/cabots-tragopan.jpg", rangeMap: ["华东","华南","华中"], intro: "腹部橙黄、头上有肉角，中国特有种，穿行于常绿阔叶林。", diet: "植食为主：壳斗科果实（橡子）、嫩叶、花芽、蕨类与菌类，兼食少量昆虫；秋冬依赖林中橡子过冬。", feed: "林下地面漫步啄食，也上树取食果实；用强喙剥开硬壳，边走边啄，偶尔刨开落叶找种子。", habitat: "海拔 500—1600 米的常绿阔叶林与混交林，偏好林下开阔、有丰富灌木与落叶层的山坡。", range: "福建、浙江、江西、广东、湖南等东南山区，呈零星岛状分布，是中国特有种。", sex: "雄鸟冠羽红、面颊蓝、腹部橙黄，繁殖期头顶竖起蓝色肉角、喉部展开彩色肉裙；雌鸟棕褐斑驳、无肉角。", breed: "繁殖期 3—5 月；雄鸟亮出“肉角+肉裙”向雌鸟炫耀求偶，每窝 2—4 枚卵，孵化约 28 天，雏鸟早成性、随母觅食。", molt: "7—9 月换羽，雄鸟换羽后肉角与肉裙更鲜艳；尾羽较长、更换较慢，换羽期多栖于密林高处。", behavior: "性情隐蔽胆小，遇危险常呆立不动靠羽色伪装；晨昏在林下活动，冬季集群栖息于高树。", extra: "中国特有种，野外数量估计数千只；人工繁育技术已成熟，多地开展野化放归。" },
+            { group: "珍稀", name: "绿孔雀", sci: "Pavo muticus", emoji: "🌈", level: "国家一级", img: "images/birds/green-peafowl.jpg", rangeMap: ["西南"], intro: "尾屏蓝绿金属光泽，中国野生孔雀仅存于云南，极度濒危。", diet: "杂食：植物种子、浆果、嫩芽、昆虫与蛙类，也啄食谷粒与落果。", feed: "林下地面踱步啄食，用喙扒开落叶与土表找种子和虫；晨昏觅食，正午多在树荫下休息。", habitat: "云南南部低山雨林、常绿阔叶林与林缘灌丛，近水源，偏好海拔 300—1500 米的原始与次生林。", range: "仅云南盈江、西双版纳、沧源等地零星分布，全球野外种群约 1.5 万—2 万只（主要在中南半岛）。", sex: "雄鸟蓝绿金属光泽羽色、华丽长尾屏（可达 1.5 米）；雌鸟棕褐、无尾屏，差异明显。", breed: "繁殖期 2—6 月（旱季）；雄鸟开屏炫耀、抖动尾羽发出沙沙声求偶，每窝 3—6 枚卵，雌鸟独自孵育约 27—30 天。", molt: "5—8 月换羽，雄鸟华丽尾屏在繁殖季后脱落更新，换羽期外观短暂黯淡；新尾屏翌年繁殖季前长成。", behavior: "夜宿高树，晨昏下地活动；警觉性高，受惊即快速奔跑或飞入林冠；叫声洪亮如“啊-呜”。", extra: "需与人工养殖的蓝孔雀（外来种）严格区分，避免杂交污染基因；是中国野生孔雀仅存的物种。" },
+            { group: "珍稀", name: "白鹤", sci: "Leucogeranus leucogeranus", emoji: "❄️", level: "国家一级", img: "images/birds/siberian-crane.jpg", rangeMap: ["东北","华东"], intro: "通体雪白、脸侧朱红，全球近八成在鄱阳湖越冬。", diet: "植食为主：水生植物块根、茎叶与螺贝；在鄱阳湖以苦草块根为最重要的越冬食物。", feed: "长喙深探浅水泥中挖取块根，头部几乎没入水中；也啄食退水草洲上的种子与嫩芽。", habitat: "浅水湖泊、草洲滩涂与水稻田；繁殖于西伯利亚东北部北极苔原湿地，越冬于江西鄱阳湖。", range: "繁殖于西伯利亚东北部苔原，迁徙经松嫩平原，越冬于江西鄱阳湖（全球 98% 以上聚集于此）。", sex: "雌雄相似：成鸟通体白、眼周与脸侧朱红；幼鸟羽色棕黄，逐年换羽变白，至 3 岁左右洁白。", breed: "繁殖期 5—7 月；在苔原湿地筑巢，每窝 1—2 枚橄榄色带斑卵，孵化约 29 天，雏鸟约 75 天长成。", molt: "越冬后 5—6 月在繁殖地换羽，飞羽同步更替、换羽期短暂不能飞行；幼鸟棕黄羽逐年变白，约 3 岁完全洁白。", behavior: "每年 11 月抵达鄱阳湖、次年 3 月北迁；迁徙呈大群编队，靠上升气流盘旋高空，一日可飞行数百公里。", extra: "全球种群约 4000—6000 只，是极危物种；鄱阳湖水位与草洲面积直接决定其越冬成败。" },
+            { group: "珍稀", name: "黑嘴鸥", sci: "Ichthyaetus saundersi", emoji: "🖤", level: "国家一级", img: "images/birds/saunderss-gull.jpg", rangeMap: ["东北","华东","华南"], intro: "黑嘴、繁殖羽黑头，全球最濒危的鸥类之一。", diet: "食虫与小鱼：滩涂昆虫、蟹类、小鱼虾与软体动物，繁殖期以滩涂上的昆虫幼虫为主。", feed: "在潮间带浅滩低头啄食，边走边停；退潮后第一时间进入滩涂觅食，也浅水涉猎小鱼。", habitat: "沿海滩涂、盐田、潮间带与养殖塘；繁殖于滩涂盐碱裸地、高草草甸，巢多筑于草墩之上。", range: "繁殖于江苏盐城、辽宁盘锦、山东黄河三角洲等地，越冬于东南沿海，全球约 1.4 万只。", sex: "雌雄相似：仅繁殖期头颈变黑（冬季头白），野外难分辨。", breed: "繁殖期 4—7 月；巢筑于滩涂高草裸地（草垫小坑），每窝 3 枚带斑卵，孵化约 24—26 天，雏鸟早成、约 30 天离巢。", molt: "6—8 月换羽，繁殖期黑头黑嘴在秋后褪去、冬季头白；次年 3—4 月再换回繁殖羽。", behavior: "常与鹭类、其他鸥类混群觅食；遇涨潮或惊扰即成群起飞，在滩涂上空盘旋待潮水退去。", extra: "对滩涂开发与围垦极为敏感，是滨海湿地保护的重要指示物种；筑巢区每年春季迎来繁殖大军。" },
+            { group: "珍稀", name: "东方白鹳", sci: "Ciconia boyciana", emoji: "🤍", level: "国家一级", img: "images/birds/oriental-stork.jpg", rangeMap: ["东北","华东","华中"], intro: "白羽黑翼、红腿红嘴，常在湿地与稻田悠闲踱步的大鸟。", diet: "食鱼为主：鱼、蛙、蛇、鼠及大型昆虫；冬季农田中的鼠类与越冬鱼群是重要食物来源。", feed: "在浅水与草地缓步巡猎，长喙快速下探“刺”捕猎物；也跟随拖拉机翻耕捡食惊出的鼠类与虫。", habitat: "开阔湿地、湖泊、稻田与河漫滩，偏好浅水与大面积裸地交错的环境。", range: "繁殖于黑龙江三江平原、兴凯湖、洪河等地，越冬于长江中下游湖泊与鄱阳湖地区。", sex: "雌雄相似：雄鸟体型略大、喙更长，野外需对比观察。", breed: "繁殖期 4—6 月；巨大枝巢筑于大树或输电铁塔，多年沿用、逐年加高，每窝 3—5 枚白卵，孵化约 31 天。", molt: "8—10 月换羽，飞羽逐根对称更替以保持飞行能力；幼鸟褐色羽次年换羽后转白。", behavior: "行走缓慢优雅、时常仰头警觉；觅食时以喙快速啄击水面；受惊起飞前先助跑数步再振翅腾空。", extra: "全球种群 7000 只以上；人工搭建巢架后繁殖成功率明显回升，是保护措施见效的代表案例。" },
+            { group: "珍稀", name: "中华凤头燕鸥", sci: "Thalasseus bernsteini", emoji: "🪽", level: "极危(CR)", img: "images/birds/chinese-crested-tern.jpg", rangeMap: ["华东","华南"], intro: "黑冠白羽橙红嘴，全球仅百余只的“神话之鸟”。", diet: "纯食鱼：小型鱼类（鳀鱼、沙丁鱼）与虾类，在浅海上空俯冲入水捕食。", feed: "盘旋于海面上空定点悬停，发现鱼群后直线俯冲扎入水中衔鱼；常在鱼群翻涌处集群捕食。", habitat: "无人海岛与近岸浅海，繁殖于裸露岩礁与沙洲，非繁殖期漂泊于开阔海域。", range: "全球种群仅 150 只左右，繁殖于中国浙江（象山韭山列岛、舟山）与福建沿海岛屿，越冬于东南亚海域。", sex: "雌雄羽色几乎相同，仅体型与嘴长略有差异，野外难以分辨。", breed: "繁殖期 5—7 月；与凤头燕鸥、大凤头燕鸥混群筑巢于岩礁沙地，每窝 1 枚带斑卵，孵化约 25—27 天，双亲轮流孵化育雏。", molt: "繁殖后 8—10 月换羽，黑冠褪去、冬羽上体偏灰白；换羽多在迁徙途中或越冬地完成。", behavior: "低空振翅飞行姿态轻盈，捕食时俯冲敏捷；对繁殖地极度忠诚，经年返回同一海岛。", extra: "因数量稀少、行踪隐秘被称为“神话之鸟”；人工招引（假鸟+音响）成功诱使其重返浙江海岛繁殖，是保护经典案例。" },
+            { group: "珍稀", name: "白头海雕", sci: "Haliaeetus leucocephalus", emoji: "🦅", level: "无危(LC)", img: "images/birds/bald-eagle.jpg", rangeMap: [], intro: "白头白尾的北美猛禽，美国国鸟，翱翔于湖海之滨。", diet: "食鱼为主：鱼类、水禽、海鸟与腐肉；也偷抢鱼鹰捕获的猎物，冬季依赖河口的鱼群与腐肉。", feed: "高空翱翔俯冲抓鱼，或水面低掠用利爪捞鱼；也常站在大树上守候猎物，冬季集群聚集于开阔水域。", habitat: "大湖、大河、海岸与开阔林缘，偏好近水的高大乔木营巢，巢多筑于树顶。", range: "北美洲广布（加拿大、美国、墨西哥北部）；中国无自然分布。", sex: "雌鸟体型比雄鸟大约 25%，羽色相同：成鸟白头白尾，幼鸟全身棕褐带斑、需 4—5 年才转为成鸟羽色。", breed: "繁殖期 12—次年 4 月（因纬度而异）；巨巢筑于高树，可多年使用、逐年加大（最大可达 2 米深），每窝 1—3 枚卵，孵化约 34—36 天。", molt: "飞羽逐年逐根对称更换（非整批脱落），换羽期仍可正常飞行；未成年棕羽经 4—5 次换羽逐渐出现白头白尾。", behavior: "翱翔姿态威严，鸣声尖锐单调；非繁殖季常集群夜栖，清晨在湖边晒羽展翅。", extra: "美国国鸟象征；曾因 DDT 污染几近灭绝，1970 年代后成功恢复，是环境保护的胜利象征。" },
+            { group: "珍稀", name: "雪鸮", sci: "Bubo scandiacus", emoji: "🦉", level: "易危(VU)", img: "images/birds/snowy-owl.jpg", rangeMap: ["东北"], intro: "通体雪白、眼神凌厉，北极苔原的“白色幽灵”。", diet: "食肉为主：旅鼠（主食）、田鼠、野兔与各种鸟类；旅鼠丰年繁殖成功率高，歉年甚至不繁殖。", feed: "白昼与黄昏捕猎（北极夏季无黑夜）：停栖高处扫视地面，发现猎物俯冲扑抓；也低空巡航搜寻。", habitat: "北极苔原开阔地带，冬季南迁至冻原、海岸与农田；偏好视野开阔的隆起地形停栖。", range: "环北极苔原带繁殖，冬季南至欧亚与北美中纬度；中国东北北部（黑龙江、内蒙古）冬季偶见迷鸟，极罕见。", sex: "雄鸟近乎纯白、斑纹极少；雌鸟密布深色横斑，是区分性别的可靠特征。", breed: "繁殖期 5—8 月；地面巢筑于苔原高处土堆，每窝 3—11 枚卵（视旅鼠丰歉），孵化约 32 天，雏鸟出壳后 25—50 天离巢。", molt: "7—9 月换羽，成年雄鸟越换越白，雌鸟保留深色横斑；白色羽在雪原上既是伪装又是身份的象征。", behavior: "可白天活动，视力与听力极佳，能听到雪下数米深处的旅鼠；飞行悄无声息。", extra: "《哈利·波特》中海德薇的原型；旅鼠数量周期直接决定其繁殖成败，是北极生态的“指示器”。" }
+        ];
+
+
+        var repTabsEl = document.getElementById("report-tabs");
+        var repGrid = document.getElementById("report-grid");
+        var repCurrent = "全部";
+
+        function renderRepTabs() {
+            var html = '<button class="cat-tab' + (repCurrent === "全部" ? " active" : "") + '" data-rep="全部">📚 全部 <em>' + BIRDS.length + '</em></button>' +
+                '<button class="cat-tab' + (repCurrent === "常见" ? " active" : "") + '" data-rep="常见">🏡 常见鸟类 <em>' + BIRDS.filter(function (b) { return b.group === "常见"; }).length + '</em></button>' +
+                '<button class="cat-tab' + (repCurrent === "珍稀" ? " active" : "") + '" data-rep="珍稀">💎 珍稀鸟类 <em>' + BIRDS.filter(function (b) { return b.group === "珍稀"; }).length + '</em></button>';
+            repTabsEl.innerHTML = html;
+        }
+
+        function renderRep() {
+            var list = BIRDS.filter(function (b) { return repCurrent === "全部" || b.group === repCurrent; });
+            repGrid.innerHTML = "";
+            list.forEach(function (b) {
+                var photoHtml = b.img
+                    ? '<div class="rep-photo"><img class="rep-photo-img" src="' + b.img + '" alt="' + esc(b.name) + '照片" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><span class="rep-photo-fallback" style="display:none">' + b.emoji + '<small>照片待补</small></span></div>'
+                    : '<div class="rep-photo noimg"><span class="rep-photo-emoji">' + b.emoji + '</span><small class="rep-photo-note">照片待补</small></div>';
+                var card = document.createElement("div");
+                card.className = "report-card";
+                card.innerHTML =
+                    photoHtml +
+                    '<div class="rep-head">' +
+                    '<span class="rep-emoji">' + b.emoji + '</span>' +
+                    '<div class="rep-title"><h3>' + esc(b.name) + '</h3>' +
+                    '<span class="rep-sci">' + esc(b.sci) + '</span></div>' +
+                    '<span class="level-badge ' + badgeCls(b.level) + '">' + esc(b.level) + '</span>' +
+                    '</div>' +
+                    '<p class="rep-intro">' + esc(b.intro) + '</p>' +
+                    '<button type="button" class="rep-toggle">📂 打开档案</button>';
+                card.addEventListener("click", function () {
+                    openDetail(b);
+                });
+                repGrid.appendChild(card);
+            });
+        }
+
+        repTabsEl.addEventListener("click", function (e) {
+            var btn = e.target.closest(".cat-tab");
+            if (!btn) return;
+            repCurrent = btn.getAttribute("data-rep");
+            renderRepTabs();
+            renderRep();
+        });
+
+        renderRepTabs();
+
+        // ---------- 今日鸟档案：每次随机一只 ----------
+        var tbCard = document.getElementById("tb-card");
+        var tbAgain = document.getElementById("tb-again");
+
+        // ---------- 分布地图：中国边界（来自 china-outline.js） + 区域高亮 ----------
+        // CHINA_PATH 由外部脚本 china-outline.js 提供（阿里 DataV GeoAtlas 边界，简化投影到 100x100）
+        var REGIONS = {
+            "东北": { x: 75, y: 22, c: "#e07a5f" },
+            "华北": { x: 62, y: 32, c: "#f2a93b" },
+            "西北": { x: 24, y: 25, c: "#81b29a" },
+            "华东": { x: 69, y: 47, c: "#3d8bb8" },
+            "华中": { x: 59, y: 48, c: "#9b72cf" },
+            "华南": { x: 58, y: 61, c: "#e76f9e" },
+            "西南": { x: 46, y: 48, c: "#4c9f70" },
+            "青藏": { x: 29, y: 50, c: "#b08a5a" }
+        };
+
+        function rangeSvg(regions) {
+            var circles = (regions || []).map(function (r) {
+                var p = REGIONS[r];
+                if (!p) return "";
+                return '<circle cx="' + p.x + '" cy="' + p.y + '" r="4.2" fill="' + p.c + '" opacity=".9"><title>' + r + '</title></circle>' +
+                    '<text x="' + p.x + '" y="' + (p.y - 6) + '" font-size="5.5" fill="' + p.c + '" text-anchor="middle" font-weight="bold">' + r + '</text>';
+            }).join("");
+            var legend = ["东北", "华北", "西北", "华东", "华中", "华南", "西南", "青藏"].map(function (r) {
+                var p = REGIONS[r];
+                var on = (regions || []).indexOf(r) !== -1;
+                return '<span class="rg-item' + (on ? " on" : "") + '"><i style="background:' + p.c + '"></i>' + r + '</span>';
+            }).join("");
+            return '<div class="map-wrap"><svg class="map-svg" viewBox="0 0 100 100" role="img" aria-label="分布区域示意图">' +
+                '<path d="' + CHINA_PATH + '" fill="#eef3f7" stroke="#8aa6bb" stroke-width="1"/>' +
+                circles + '</svg><div class="rg-legend">' + legend + '</div></div>';
+        }
+
+        // ---------- 雌雄对比示意图 ----------
+        function birdSil(fill) {
+            return '<svg class="sil" viewBox="0 0 60 52" aria-hidden="true">' +
+                '<ellipse cx="30" cy="26" rx="16" ry="11" fill="' + fill + '"/>' +
+                '<circle cx="17" cy="17" r="6" fill="' + fill + '"/>' +
+                '<polygon points="9,15 15,17 9,20" fill="#e8a33d"/>' +
+                '<polygon points="44,23 54,19 52,30" fill="' + fill + '"/>' +
+                '<line x1="26" y1="37" x2="24" y2="48" stroke="#8a6d3b" stroke-width="1.6"/>' +
+                '<line x1="33" y1="37" x2="35" y2="48" stroke="#8a6d3b" stroke-width="1.6"/>' +
+                '</svg>';
+        }
+
+        function splitSex(t) {
+            var male = [], female = [], note = [];
+            String(t).split(/[；;，,]/).forEach(function (p) {
+                p = p.trim();
+                if (!p) return;
+                if (p.indexOf("雄") !== -1) male.push(p);
+                else if (p.indexOf("雌") !== -1) female.push(p);
+                else note.push(p);
+            });
+            return { male: male.join("；"), female: female.join("；"), note: note.join("；") };
+        }
+
+        function sexCompareHtml(b) {
+            var s = splitSex(b.sex);
+            return '<div class="sex-wrap">' +
+                '<div class="sex-col"><div class="sex-tag male">雄 ♂</div>' + birdSil("#3a5a8c") +
+                '<p class="sex-txt">' + esc(s.male || "与雌鸟相似，需对比观察") + '</p></div>' +
+                '<div class="sex-col"><div class="sex-tag female">雌 ♀</div>' + birdSil("#c2a878") +
+                '<p class="sex-txt">' + esc(s.female || "与雄鸟相似，体型略小") + '</p></div>' +
+                (s.note ? '<div class="sex-note">' + esc(s.note) + '</div>' : '') +
+                '</div>';
+        }
+
+        function modCard(icon, title, body) {
+            return '<div class="mod-card"><div class="mod-ic">' + icon + '</div><div class="mod-bd"><h4>' + title + '</h4><div class="mod-txt">' + body + '</div></div></div>';
+        }
+
+        function badgeCls(level) {
+            if (level.indexOf("一级") !== -1 || level.indexOf("极危") !== -1) return "badge-1";
+            if (level.indexOf("二级") !== -1 || level.indexOf("易危") !== -1) return "badge-2";
+            return "badge-3";
+        }
+
+        // ---------- 说明类型导航（文件夹式：一页一种说明，点击切换） ----------
+        var SECS = [
+            { key: "diet", icon: "🍽️", label: "食性" },
+            { key: "feed", icon: "🍴", label: "觅食方式" },
+            { key: "habitat", icon: "🏞️", label: "居住环境" },
+            { key: "range", icon: "🗺️", label: "分布地" },
+            { key: "sex", icon: "👫", label: "雌雄辨认" },
+            { key: "breed", icon: "🥚", label: "繁殖期" },
+            { key: "molt", icon: "🪶", label: "羽毛更替" },
+            { key: "behavior", icon: "🐾", label: "行为习性" },
+            { key: "extra", icon: "✨", label: "亮点" }
+        ];
+
+        var tbSec = (function () {
+            var h = (location.hash || "").replace("#", "");
+            for (var i = 0; i < SECS.length; i++) if (SECS[i].key === h) return h;
+            return "diet";
+        })();
+        var currentBird = null;
+
+        function secContent(b, key) {
+            switch (key) {
+                case "diet": return { title: "🍽️ 食性", body: esc(b.diet) };
+                case "feed": return { title: "🍴 觅食方式", body: esc(b.feed) };
+                case "habitat": return { title: "🏞️ 居住环境", body: esc(b.habitat) };
+                case "range": return { title: "🗺️ 分布地", body: rangeSvg(b.rangeMap) + (b.range ? '<p class="rg-txt">' + esc(b.range) + '</p>' : '') };
+                case "sex": return { title: "👫 雌雄辨认", body: sexCompareHtml(b) };
+                case "breed": return { title: "🥚 繁殖期", body: esc(b.breed) };
+                case "molt": return { title: "🪶 羽毛更替", body: esc(b.molt) };
+                case "behavior": return { title: "🐾 行为习性", body: esc(b.behavior) };
+                case "extra": return { title: "✨ 亮点", body: esc(b.extra) };
+            }
+            return null;
+        }
+
+        function photoHtml(b) {
+            if (b.img) {
+                return '<img class="tb-img" src="' + b.img + '" alt="' + esc(b.name) + '照片" onerror="this.parentNode.innerHTML=this.parentNode.innerHTML.replace(this.outerHTML,\'\')">';
+            }
+            return '<div class="tb-emoji-big">' + b.emoji + '</div>' +
+                '<p class="tb-noimg">📷 真实照片待补 · 先用插画认识它</p>';
+        }
+
+        function navHtml(sec) {
+            var html = "";
+            for (var i = 0; i < SECS.length; i++) {
+                var s = SECS[i];
+                html += '<button type="button" class="tb-nav-btn' + (s.key === sec ? " active" : "") + '" data-sec="' + s.key + '">' + s.icon + ' ' + s.label + '</button>';
+            }
+            return html;
+        }
+
+        function pageHtml(b, sec) {
+            var c = secContent(b, sec) || secContent(b, "diet");
+            return '<div class="tb-page">' +
+                '<div class="tb-page-head">' + c.title + '</div>' +
+                '<div class="tb-page-body">' + c.body + '</div>' +
+                '</div>';
+        }
+
+        function detailHtml(b, sec) {
+            return '<div class="tb-photo">' + photoHtml(b) + '</div>' +
+                '<div class="tb-info">' +
+                '<div class="tb-title"><h3>' + b.emoji + ' ' + esc(b.name) + '</h3>' +
+                '<span class="tb-sci">' + esc(b.sci) + '</span>' +
+                '<span class="level-badge ' + badgeCls(b.level) + '">' + esc(b.level) + '</span></div>' +
+                '<p class="tb-intro">' + esc(b.intro) + '</p>' +
+                '<div class="tb-nav">' + navHtml(sec) + '</div>' +
+                pageHtml(b, sec) +
+                '</div>';
+        }
+
+        // ---------- 翻书音效（Web Audio 合成：带通噪声 + 快速衰减，无需音频文件） ----------
+        var pageTurnCtx = null;
+        var pageTurnBuf = null;
+
+        function pageTurnSound() {
+            try {
+                var AC = window.AudioContext || window.webkitAudioContext;
+                if (!AC) return;
+                if (!pageTurnCtx) {
+                    pageTurnCtx = new AC();
+                    var len = Math.floor(pageTurnCtx.sampleRate * 0.35);
+                    pageTurnBuf = pageTurnCtx.createBuffer(1, len, pageTurnCtx.sampleRate);
+                    var d = pageTurnBuf.getChannelData(0);
+                    for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+                }
+                if (pageTurnCtx.state === "suspended") pageTurnCtx.resume();
+                var now = pageTurnCtx.currentTime;
+                function burst(freq, q, vol, delay, dur) {
+                    var t = now + delay;
+                    var src = pageTurnCtx.createBufferSource();
+                    src.buffer = pageTurnBuf;
+                    var bp = pageTurnCtx.createBiquadFilter();
+                    bp.type = "bandpass";
+                    bp.frequency.value = freq;
+                    bp.Q.value = q;
+                    var g = pageTurnCtx.createGain();
+                    g.gain.setValueAtTime(0.0001, t);
+                    g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+                    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+                    src.connect(bp); bp.connect(g); g.connect(pageTurnCtx.destination);
+                    src.start(t);
+                }
+                burst(2500, 0.9, 0.22, 0.00, 0.18);   // 主沙沙：低频段纸页摩擦
+                burst(3800, 1.2, 0.10, 0.06, 0.12);   // 轻尾音：更高频的翻页收尾
+            } catch (e) {}
+        }
+
+        function bindNav(cardEl) {
+            cardEl.addEventListener("click", function (e) {
+                var btn = e.target.closest(".tb-nav-btn");
+                if (!btn) return;
+                pageTurnSound();
+                var sec = btn.getAttribute("data-sec");
+                var bidx = parseInt(cardEl.getAttribute("data-bidx"), 10);
+                if (isNaN(bidx)) return;
+                var b = BIRDS[bidx];
+                var btns = cardEl.querySelectorAll(".tb-nav-btn");
+                for (var i = 0; i < btns.length; i++) btns[i].classList.toggle("active", btns[i] === btn);
+                cardEl.querySelector(".tb-page").outerHTML = pageHtml(b, sec);
+                try { history.replaceState(null, "", "#" + sec); } catch (err) {}
+            });
+        }
+
+        function renderRandomBird() {
+            currentBird = BIRDS[Math.floor(Math.random() * BIRDS.length)];
+            tbCard.setAttribute("data-bidx", String(BIRDS.indexOf(currentBird)));
+            tbCard.innerHTML = detailHtml(currentBird, tbSec);
+        }
+
+        function openDetail(b) {
+            var bidx = BIRDS.indexOf(b);
+            var overlay = document.createElement("div");
+            overlay.className = "tb-overlay";
+            overlay.innerHTML = '<div class="tb-modal"><button type="button" class="tb-modal-close" aria-label="关闭">✕</button></div>';
+            var card = document.createElement("div");
+            card.className = "tb-card tb-modal-card";
+            card.setAttribute("data-bidx", String(bidx));
+            card.innerHTML = detailHtml(b, "diet");
+            overlay.querySelector(".tb-modal").appendChild(card);
+            function close() {
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                document.removeEventListener("keydown", onKey);
+            }
+            function onKey(e) { if (e.key === "Escape") close(); }
+            overlay.addEventListener("click", function (e) {
+                if (e.target === overlay || e.target.closest(".tb-modal-close")) close();
+            });
+            document.addEventListener("keydown", onKey);
+            document.body.appendChild(overlay);
+            bindNav(card);
+        }
+
+        tbAgain.addEventListener("click", renderRandomBird);
+        renderRep();
+        renderRandomBird();
+        bindNav(tbCard);
+
+    })();
+    </script>
+    <script src="bg-feathers.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>推荐书单-BirdCloud.Library 鸟云图书馆</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="logo">🐦📚 BirdCloud.Library 鸟云图书馆</div>
+        <nav>
+            <a href="birds.html">今日鸟档案</a>
+            <a href="index.html" class="active">推荐书单</a>
+            <a href="science.html">科普专栏</a>
+            <a href="../birdcloud/index.html">🏠 返回鸟云首页</a>
+        </nav>
+    </header>
+
+    <!-- 主横幅 -->
+    <section class="banner">
+        <h1>🌟 推荐书单</h1>
+        <p>精选 30 本鸟类与自然好书，从入门到经典，按分类慢慢挑选</p>
+    </section>
+
+    <!-- 分类标签 -->
+    <main class="container wide">
+        <div class="cat-tabs" id="cat-tabs"></div>
+        <p class="section-sub" id="count-line">共 30 本推荐书目</p>
+
+        <!-- 书单网格 -->
+        <div class="book-grid" id="book-grid"></div>
+    </main>
+
+
+    <footer>
+        <p>BirdCloud.Library 鸟云图书馆 © 2026</p>
+    </footer>
+
+    <script>
+    (function () {
+
+        // ---------- 推荐书单数据 ----------
+        var CATS = [
+            { key: "图鉴", label: "📕 图鉴" },
+            { key: "科普", label: "💡 科普" },
+            { key: "自然文学", label: "🖋️ 自然文学" },
+            { key: "生态研究", label: "🌿 生态研究" },
+            { key: "工具书", label: "🧰 工具书" },
+            { key: "儿童绘本", label: "🧒 儿童绘本" }
+        ];
+
+        var BOOKS = [
+            // ---- 图鉴 ----
+            { title: "中国鸟类野外手册", author: "马敬能", cat: "图鉴", emoji: "🐦", stars: 5, desc: "收录中国鸟类上千种，配手绘插图与分布信息。", reason: "观鸟人的第一本工具书，入门必备" },
+            { title: "中国鸟类图鉴", author: "曲利明", cat: "图鉴", emoji: "🦉", stars: 4, desc: "以实拍照片为主的国内鸟类图鉴，便于野外对照识别。", reason: "想用照片认鸟，这本最直观" },
+            { title: "DK 鸟类大百科", author: "DK 公司", cat: "图鉴", emoji: "🦚", stars: 4, desc: "覆盖全球主要鸟类的形态、习性与分布。", reason: "大开眼界的世界鸟类全览" },
+            { title: "中国野鸟速查手册", author: "观鸟编辑部", cat: "图鉴", emoji: "🕊️", stars: 4, desc: "便携速查口袋本，常见野鸟一翻即得。", reason: "塞进口袋的野外速查利器" },
+            // ---- 科普 ----
+            { title: "鸟类的天赋", author: "珍妮弗·阿克曼", cat: "科普", emoji: "🧠", stars: 5, desc: "鸟类的记忆力、工具使用与歌唱智慧。", reason: "读完你会重新认识每一只鸟" },
+            { title: "鸟喙", author: "乔纳森·斯拉特", cat: "科普", emoji: "🪶", stars: 4, desc: "从加拉帕戈斯地雀到达尔文，鸟喙背后的演化故事。", reason: "一个喙形，一部演化史诗" },
+            { title: "鸟鸣时节", author: "布雷特·韦斯特伍德", cat: "科普", emoji: "🎵", stars: 4, desc: "按月份讲述一年中的鸟鸣，学会用耳朵认识身边的鸟。", reason: "学会用耳朵观鸟" },
+            { title: "所罗门王的指环", author: "康拉德·洛伦茨", cat: "科普", emoji: "👑", stars: 5, desc: "动物行为学之父的经典科普，寒鸦与灰雁的故事妙趣横生。", reason: "动物行为学神作，读来妙趣横生" },
+            { title: "鸟巢的秘密", author: "北村美纪", cat: "科普", emoji: "🪺", stars: 4, desc: "拆解各种鸟巢的建造工艺，惊叹于鸟类建筑师的巧思。", reason: "惊叹鸟类建筑师的巧思" },
+            { title: "蜂鸟传", author: "大卫·伯德", cat: "科普", emoji: "🐝", stars: 4, desc: "倒飞、悬停与高速振翅，最小鸟类的惊人生活。", reason: "最小鸟类的惊人生活" },
+            { title: "猫头鹰", author: "德斯蒙德·莫里斯", cat: "科普", emoji: "🦉", stars: 4, desc: "猫头鹰的文化史与自然史，揭开夜行猛禽的神秘面纱。", reason: "揭开夜行猛禽的神秘面纱" },
+            { title: "羽毛的故事", author: "索尔·汉森", cat: "科普", emoji: "🪶", stars: 4, desc: "从恐龙到羽毛衣，一根羽毛的演化之旅。", reason: "原来一根羽毛藏着一部历史" },
+            // ---- 自然文学 ----
+            { title: "游隼", author: "J.A. 贝克", cat: "自然文学", emoji: "🦅", stars: 5, desc: "追猎者与猎物的双重视角，一部关于游隼的自然文学杰作。", reason: "自然文学巅峰之作" },
+            { title: "海鸟的哭泣", author: "亚当·尼科尔森", cat: "自然文学", emoji: "🌊", stars: 5, desc: "诗意与科学交织的海鸟史诗，写尽海鸟的迁徙、爱与哀愁。", reason: "海鸟的诗意与哀愁" },
+            { title: "醒来的森林", author: "约翰·巴勒斯", cat: "自然文学", emoji: "🌲", stars: 4, desc: "清晨树林里的观鸟散文，聆听第一声鸟鸣。", reason: "和煦如晨光的美文" },
+            { title: "飞鸟集", author: "泰戈尔", cat: "自然文学", emoji: "✨", stars: 4, desc: "「天空没有留下翅膀的痕迹，但我已飞过」。", reason: "写给飞鸟的诗集" },
+            { title: "麻雀日记", author: "阿·德·斯米尔诺夫", cat: "自然文学", emoji: "🐦", stars: 3, desc: "屋檐下麻雀一年四季的生活，平凡中的趣味。", reason: "平凡麻雀的趣味观察" },
+            { title: "观鸟者的春天", author: "陈晓东", cat: "自然文学", emoji: "🌼", stars: 3, desc: "一位中国观鸟者的四季笔记，记录身边的候鸟来去。", reason: "身边的候鸟来去，最易共鸣" },
+            // ---- 生态研究 ----
+            { title: "寂静的春天", author: "蕾切尔·卡森", cat: "生态研究", emoji: "🌱", stars: 5, desc: "警示农药对鸟类与自然的无声杀戮。", reason: "改变世界的环保经典" },
+            { title: "鸟类的迁徙", author: "张正旺", cat: "生态研究", emoji: "🗺️", stars: 4, desc: "聚焦候鸟迁徙的路线、机制与保护。", reason: "天空旅行者的路线图" },
+            { title: "中国鹤类", author: "王岐山", cat: "生态研究", emoji: "🦩", stars: 4, desc: "中国鹤类的系统研究，涵盖丹顶鹤、白鹤等珍稀物种。", reason: "丹顶鹤、白鹤的珍贵档案" },
+            { title: "鸟与人的一万年", author: "艾米丽·罗伯茨", cat: "生态研究", emoji: "🏺", stars: 4, desc: "从史前岩画到现代城市，梳理人类与鸟类共存的一万年。", reason: "人类与鸟类的一万年共生史" },
+            // ---- 工具书 ----
+            { title: "鸟类学", author: "郑光美", cat: "工具书", emoji: "📖", stars: 5, desc: "国内鸟类学权威教材，系统讲解形态、分类、行为与生态。", reason: "权威教材，系统入门" },
+            { title: "中国观鸟者指南", author: "中国观鸟组织联合行动平台", cat: "工具书", emoji: "🔭", stars: 4, desc: "观鸟入门操作手册：装备选择、野外技巧与常见问题。", reason: "观鸟上路前的操作手册" },
+            { title: "野鸟观察入门", author: "日本野鸟协会", cat: "工具书", emoji: "🎒", stars: 4, desc: "从零开始的观鸟教程，教你寻找、观察并记录野鸟。", reason: "零基础也能轻松上手" },
+            { title: "珍稀鸟类的保护", author: "环境规划署编译组", cat: "工具书", emoji: "🛡️", stars: 4, desc: "濒危鸟类的现状与保护案例，观鸟者的责任指南。", reason: "观鸟者的责任指南" },
+            // ---- 儿童绘本 ----
+            { title: "企鹅的成长", author: "李约瑟·布朗", cat: "儿童绘本", emoji: "🐧", stars: 4, desc: "企鹅宝宝的成长绘本，画风温暖，故事动人。", reason: "温暖画风，亲子共读首选" },
+            { title: "小鸟来我家", author: "周翔", cat: "儿童绘本", emoji: "🏠", stars: 4, desc: "窗外的鸟邻居，教会孩子观察与爱护身边的生灵。", reason: "教会孩子爱护身边生灵" },
+            { title: "候鸟驿站", author: "董亚楠", cat: "儿童绘本", emoji: "🛤️", stars: 4, desc: "湿地候鸟保护站的绘本故事，传递迁徙路上的温暖。", reason: "传递迁徙路上的温暖" },
+            { title: "小鹬鸟学飞", author: "海伦·库珀", cat: "儿童绘本", emoji: "🐣", stars: 4, desc: "一只小鹬鸟的第一次飞行，关于勇气与成长。", reason: "给勇敢的小读者" }
+        ];
+
+        var tabsEl = document.getElementById("cat-tabs");
+        var grid = document.getElementById("book-grid");
+        var countLine = document.getElementById("count-line");
+        var currentCat = "全部";
+
+        function esc(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+        }
+
+        function starsText(n) {
+            var s = "";
+            for (var i = 0; i < n; i++) s += "★";
+            for (var j = n; j < 5; j++) s += "☆";
+            return s;
+        }
+
+        function countBy(cat) {
+            if (cat === "全部") return BOOKS.length;
+            return BOOKS.filter(function (b) { return b.cat === cat; }).length;
+        }
+
+        function renderTabs() {
+            var html = '<button class="cat-tab active" data-cat="全部">全部 <em>' + BOOKS.length + '</em></button>';
+            CATS.forEach(function (c) {
+                html += '<button class="cat-tab" data-cat="' + c.key + '">' + c.label + ' <em>' + countBy(c.key) + '</em></button>';
+            });
+            tabsEl.innerHTML = html;
+        }
+
+        function renderBooks() {
+            var list = BOOKS.filter(function (b) {
+                return currentCat === "全部" || b.cat === currentCat;
+            });
+
+            countLine.textContent = "共 " + list.length + " 本推荐书目" + (currentCat === "全部" ? "" : "（分类：" + currentCat + "）");
+            grid.innerHTML = "";
+
+            var withCover = ["中国鸟类野外手册", "DK 鸟类大百科", "所罗门王的指环", "鸟巢的秘密", "游隼", "海鸟的哭泣", "醒来的森林", "飞鸟集", "麻雀日记", "寂静的春天"];
+            list.forEach(function (b, i) {
+                var div = document.createElement("div");
+                div.className = "book-card";
+                var coverLinkHtml = withCover.indexOf(b.title) > -1
+                    ? '<button type="button" class="cover-link" data-cover="images/covers/' + encodeURIComponent(b.title) + '.jpg">📷 点击查看图片</button>'
+                    : '';
+                div.innerHTML =
+                    '<div class="left-page">' +
+                    '<div class="book-emoji">' + b.emoji + '</div>' +
+                    '<h3>' + esc(b.title) + '</h3>' +
+                    '<p class="author">' + esc(b.author) + '</p>' +
+                    '<div class="tags"><span class="tag">' + esc(b.cat) + '</span></div>' +
+                    '</div>' +
+                    '<div class="book-spine" aria-hidden="true"></div>' +
+                    '<div class="right-page">' +
+                    '<p class="desc">' + esc(b.desc) + '</p>' +
+                    '<div class="stars">' + starsText(b.stars) + '</div>' +
+                    '<p class="reason">⭐ 推荐理由：' + esc(b.reason) + '</p>' +
+                    coverLinkHtml +
+                    '<span class="page-num">— ' + (i + 1) + ' —</span>' +
+                    '</div>';
+                grid.appendChild(div);
+            });
+        }
+
+        tabsEl.addEventListener("click", function (e) {
+            var btn = e.target.closest(".cat-tab");
+            if (!btn) return;
+            currentCat = btn.getAttribute("data-cat");
+            var tabs = tabsEl.querySelectorAll(".cat-tab");
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.toggle("active", tabs[i] === btn);
+            }
+            renderBooks();
+        });
+
+        renderTabs();
+        renderBooks();
+
+        document.addEventListener("click", function (e) {
+            var link = e.target.closest ? e.target.closest(".cover-link") : null;
+            if (link) {
+                var img = document.getElementById("coverLightboxImg");
+                img.src = link.getAttribute("data-cover");
+                document.getElementById("coverLightbox").hidden = false;
+                return;
+            }
+            if (e.target.closest(".lightbox-close") || e.target.closest(".lightbox-backdrop")) {
+                document.getElementById("coverLightbox").hidden = true;
+            }
+        });
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") {
+                var lb = document.getElementById("coverLightbox");
+                if (lb && !lb.hidden) lb.hidden = true;
+            }
+        });
+
+    })();
+    </script>
+    <div class="lightbox" id="coverLightbox" hidden>
+        <div class="lightbox-backdrop"></div>
+        <img id="coverLightboxImg" alt="书籍封面">
+        <button type="button" class="lightbox-close" title="关闭">✕</button>
+    </div>
+    <script src="bg-feathers.js"></script>
+</body>
+</html>

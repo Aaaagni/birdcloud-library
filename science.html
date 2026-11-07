@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科普专栏-BirdCloud.Library 鸟云图书馆</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="logo">🐦📚 BirdCloud.Library 鸟云图书馆</div>
+        <nav>
+            <a href="birds.html">今日鸟档案</a>
+            <a href="index.html">推荐书单</a>
+            <a href="science.html" class="active">科普专栏</a>
+        </nav>
+    </header>
+
+    <!-- 主横幅 -->
+    <section class="banner">
+        <h1>🩺 科普专栏</h1>
+        <p>遇见受伤野鸟怎么办？鸟类疾病如何识别？救治前，先看完这一页</p>
+    </section>
+
+    <main class="container wide">
+        <!-- 快速导航 -->
+        <div class="quick-nav">
+            <a href="#first-aid">🐣 遇见受伤野鸟</a>
+            <a href="#diseases">🦠 常见鸟类疾病</a>
+            <a href="#treat">🏥 如何救治</a>
+            <a href="#help">📞 求助渠道</a>
+        </div>
+
+        <!-- 顶部警示 -->
+        <div class="warn-box red">
+            <strong>🚨 首先记住：救助野鸟请以专业机构意见为准</strong>
+            以下内容为通用科普参考，不能替代兽医诊断。发现伤鸟，第一时间联系当地野生动物救助机构、林业部门或正规观鸟组织。切勿自行用药、喂食或长期饲养野生鸟类（违法且对鸟有害）。
+        </div>
+
+        <!-- ========== 板块一：遇见受伤野鸟 ========== -->
+        <section class="sci-zone zone-anchor" id="first-aid">
+            <div class="zone-head">
+                <span class="zone-emoji">🐣</span>
+                <h2>遇见受伤野鸟——先判断，再行动</h2>
+            </div>
+            <p class="zone-sub">路上遇到一只鸟，别急着"救"！多数情况下，它可能根本不需要人类帮忙。</p>
+
+            <div class="warn-box orange">
+                <strong>⚠️ 先判断：这只鸟真的需要救助吗？</strong>
+                <ul style="padding-left:20px;margin:0;">
+                    <li><strong>学飞幼鸟在地上扑腾、羽毛未齐</strong>：它可能在练飞，亲鸟就在附近照看。远离观察 1-2 小时，别捡走！</li>
+                    <li><strong>有明显外伤</strong>（流血、翅膀耷拉、跛行、拖地）、<strong>被猫狗抓咬过</strong>、<strong>无法站立</strong>、<strong>眼神呆滞无反应</strong>：需要救助。</li>
+                    <li><strong>撞玻璃/撞车后短暂发呆</strong>：可能是脑震荡。先安置在安静纸箱观察 30 分钟，能飞走就放归。</li>
+                    <li><strong>羽毛油污、黏着、抽搐、口吐异物</strong>：可能中毒或生病，需要救助。</li>
+                </ul>
+            </div>
+
+            <div class="do-dont">
+                <div class="do-col">
+                    <h4>✅ 应该做</h4>
+                    <ul>
+                        <li>戴上手套再接触（预防禽流感等疾病）</li>
+                        <li>用毛巾或纸盒轻轻罩住，减少惊吓应激</li>
+                        <li>放进打好透气孔的纸箱，垫上毛巾，盖住开口</li>
+                        <li>放在安静、温暖（约 25-30℃）的房间，远离猫狗和小孩</li>
+                        <li>尽快联系专业救助机构</li>
+                    </ul>
+                </div>
+                <div class="dont-col">
+                    <h4>🚫 千万不要</h4>
+                    <ul>
+                        <li>不要喂牛奶、面包、米饭、巧克力（会致命）</li>
+                        <li>不要强行灌水（容易呛入气管致死）</li>
+                        <li>不要频繁打开纸箱查看、把玩</li>
+                        <li>不要自己上人用药品（剂量对鸟是毒药）</li>
+                        <li>不要把学飞幼鸟当成"被遗弃"捡回家</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 板块二：常见鸟类疾病 ========== -->
+        <section class="sci-zone zone-anchor" id="diseases">
+            <div class="zone-head">
+                <span class="zone-emoji">🦠</span>
+                <h2>常见鸟类疾病——认出症状</h2>
+            </div>
+            <p class="zone-sub">以下为野鸟常见健康问题，识别症状能帮你判断是否需要干预、以及如何保护自己。</p>
+
+            <h3 class="d-group-title">🧾 常见高发疾病（各鸟种通用）</h3>
+            <div class="disease-grid" id="common-grid"></div>
+
+            <!-- 更多病状折叠区 -->
+            <div class="more-btn-wrap">
+                <button class="btn" id="more-btn">📂 更多病状 · 按鸟种分类查看</button>
+            </div>
+            <div class="more-zone" id="more-zone">
+                <h3 class="d-group-title">🗂️ 按鸟种分类的病状</h3>
+                <div class="cat-tabs" id="disease-tabs"></div>
+                <div class="disease-grid" id="disease-grid"></div>
+            </div>
+        </section>
+
+        <!-- ========== 板块三：如何救治 ========== -->
+        <section class="sci-zone zone-anchor" id="treat">
+            <div class="zone-head">
+                <span class="zone-emoji">🏥</span>
+                <h2>如何救治——六步应急流程</h2>
+            </div>
+            <p class="zone-sub">在联系到专业机构之前，按顺序做好这几步，能大幅提高存活率。</p>
+
+            <div class="steps">
+                <div class="step-card">
+                    <span class="step-num">1</span>
+                    <h4>评估状态</h4>
+                    <p>观察呼吸（胸腹起伏）、外伤出血、是否失温发抖。判断是否为传染性疾病高风险个体。</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">2</span>
+                    <h4>安全安置</h4>
+                    <p>戴手套放入打孔纸箱，垫毛巾。放在安静温暖处（25-30℃），盖住开口减少应激。</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">3</span>
+                    <h4>保温补水</h4>
+                    <p>失温个体用毛巾包裹热水瓶（不直接贴皮肤）。只在嘴角滴几滴温水/生理盐水，绝不强灌。</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">4</span>
+                    <h4>联系专业</h4>
+                    <p>联系野生动物救护中心、林业部门或观鸟组织，说明物种、状态、发现地点。</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">5</span>
+                    <h4>转运送医</h4>
+                    <p>按机构指引送达。途中保持黑暗安静，不要喂食、不要把玩、注意防寒。</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">6</span>
+                    <h4>康复放归</h4>
+                    <p>放归必须由专业人员评估：伤愈、能飞行、能觅食后才可放归原发现地附近。</p>
+                </div>
+            </div>
+
+            <div class="warn-box red">
+                <strong>🚫 救治红线</strong>
+                不喂牛奶面包、不强行喂水、不自行用药、不长期私养、不随意放归未愈个体。私自饲养国家重点保护野生动物涉嫌违法，且圈养环境下长大的鸟无法回归野外。
+            </div>
+
+            <div class="warn-box green">
+                <strong>✅ 正确姿势</strong>
+                你的角色是"临时保管员 + 中转站"，而不是"兽医"。稳定状态、保温、尽快转交给专业机构，就是最大的帮助。
+            </div>
+        </section>
+
+        <!-- ========== 求助渠道 ========== -->
+        <section class="sci-zone zone-anchor" id="help">
+            <div class="zone-head">
+                <span class="zone-emoji">📞</span>
+                <h2>遇到伤鸟，可以联系谁？</h2>
+            </div>
+            <ul class="channel-list">
+                <li>📞 当地<strong>林业和草原局</strong> / 自然资源部门（野生动物保护科）</li>
+                <li>📞 当地<strong>野生动物救护中心 / 动物园</strong>（多数城市动物园承担救护职能）</li>
+                <li>📞 政务服务热线 <strong>12345</strong> 转野生动物救助；或 110 由公安转接林业部门</li>
+                <li>📞 正规<strong>观鸟组织 / 鸟类保护协会</strong>（往往有合作兽医资源）</li>
+                <li>🐦 中国观鸟记录中心、各地野鸟会公众号通常公布本地求助电话</li>
+            </ul>
+            <div class="disclaimer">
+                <strong>免责声明：</strong>本文为通用科普参考，不构成医疗建议。不同鸟种、伤情与当地法规差异很大，请务必以当地野生动物救助机构或专业兽医的意见为准。救助过程中请做好个人防护（手套、洗手），谨防禽流感、沙门氏菌等疾病传播。
+            </div>
+        </section>
+    </main>
+
+    <script>
+    (function () {
+
+        function esc(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+        }
+
+        function diseaseCard(d) {
+            var imgHtml = "";
+            if (d.img) {
+                imgHtml = '<div class="d-img-wrap">' +
+                    '<button type="button" class="d-img-btn">🖼️ 查看真实病例图（⚠️ 可能引起不适）</button>' +
+                    '<div class="d-img-hidden">' +
+                    '<img src="images/disease/' + d.img + '" alt="' + esc(d.name) + ' 真实病例照片" loading="lazy">' +
+                    '<p class="d-img-note">⚠️ 图为真实病例/病理照片（来源：MSD 兽医手册），可能引起不适。查看即表示已知晓。</p>' +
+                    '</div></div>';
+            }
+            return '<div class="disease-card">' +
+                '<div class="d-emoji">' + d.emoji + '</div>' +
+                '<h4>' + esc(d.name) + '</h4>' +
+                '<p>症状：' + esc(d.symp) + '</p>' +
+                '<p>注意：' + esc(d.note) + '</p>' +
+                '<span class="d-risk">' + esc(d.risk) + '</span>' +
+                imgHtml +
+                '</div>';
+        }
+
+        // ---------- 通用高发疾病（各鸟种通用） ----------
+        var COMMON = [
+            { name: "禽流感（H5Nx 等）", emoji: "🦠", symp: "精神萎靡、羽毛蓬乱、歪头、呼吸困难、突然死亡。", note: "人畜共患，接触必须戴手套口罩，事后彻底洗手，儿童孕妇远离。", risk: "⚠️ 高风险人畜共患", img: "avian-influenza.jpg" },
+            { name: "羽虱 / 螨虫", emoji: "🐛", symp: "羽毛残缺、羽根有虫卵、频繁啄羽、皮肤发炎、消瘦贫血。", note: "体外寄生虫，可传染给其他鸟，需隔离并专业驱虫。", risk: "传染性", img: "lice.jpg" },
+            { name: "细菌感染（沙门氏菌等）", emoji: "🧫", symp: "拉稀（绿色水便）、精神差、翅膀下垂、食欲不振。", note: "沙门氏菌可感染人，处理粪便戴手套、勤洗手。", risk: "⚠️ 可人畜共患", img: "salmonella.jpg" },
+            { name: "中毒（农药/鼠药/铅/油污）", emoji: "💊", symp: "抽搐、无力、口吐黏液、羽毛油污黏着、步态不稳。", note: "油污鸟需要专业清洗；鼠药中毒有内出血风险，尽快送医。", risk: "⚠️ 紧急" },
+            { name: "外伤（撞窗/电线/猫抓）", emoji: "🪟", symp: "骨折、翅膀耷拉、出血、脑震荡发呆——野外最常见。", note: "骨折不要自行固定，猫抓伤易引发败血症，必须专业抗生素治疗。", risk: "最常见" },
+            { name: "营养不良 / 雏鸟饲喂不当", emoji: "🪶", symp: "软骨变形、羽毛发育不良、生长迟缓、瘫痪。", note: "多为人类错误喂食（牛奶、米饭）导致，送医前不要再喂任何食物。", risk: "人为造成" },
+            { name: "球虫病", emoji: "🦠", symp: "血便、消瘦、精神萎靡，雏鸟高发。", note: "肠道寄生虫病，需专业驱虫药治疗，避免群聚传播。", risk: "雏鸟高发", img: "coccidiosis.jpg" },
+            { name: "低体温 / 脱水", emoji: "🧊", symp: "发抖、虚脱、反应迟钝，雏鸟多见。", note: "先保温（25-30℃），嘴角滴温水，切勿强行灌水。", risk: "急救项" }
+        ];
+
+        // ---------- 按鸟种分类的病状 ----------
+        var GROUPS = [
+            { key: "鸽形目", label: "🕊️ 鸽形目（鸽·鸠）" },
+            { key: "雀形目", label: "🐦 雀形目（鸣禽）" },
+            { key: "雁形目", label: "🦆 雁形目（水禽）" },
+            { key: "猛禽类", label: "🦅 猛禽类" },
+            { key: "雉鸡类", label: "🐔 雉鸡类（家禽）" }
+        ];
+
+        var MORE = [
+            // ---- 鸽形目（鸽、鸠类） ----
+            { cat: "鸽形目", name: "鸽痘", emoji: "🐦", symp: "眼周、嘴角等无羽区灰白色结节；黏膜型在口腔出现白斑，可堵塞呼吸道。", note: "禽痘病毒所致，无特效药，靠自愈 + 防继发感染，加强环境消毒。", risk: "鸽类专属", img: "pigeonpox.jpg" },
+            { cat: "鸽形目", name: "鸽副黏病毒病（PPMV-1）", emoji: "🧠", symp: "歪头转圈、水样绿便、翅膀下垂——俗称「鸽瘟」。", note: "传染性极强，立即隔离病鸽，病死率高，上报专业机构。", risk: "⚠️ 高传染", img: "newcastle.jpg" },
+            { cat: "鸽形目", name: "鸽毛滴虫", emoji: "🦷", symp: "口腔、咽喉黄白色干酪样结节，张嘴呼吸、吞咽困难。", note: "接触性传播，雏鸽高发，需专业抗滴虫药物。", risk: "鸽类常见", img: "trichomonosis.jpg" },
+            { cat: "鸽形目", name: "鸽圆环病毒", emoji: "💫", symp: "幼鸽贫血苍白、羽毛断裂、免疫抑制、生长停滞。", note: "破坏免疫系统，极易继发其他感染，重在预防。", risk: "幼鸽高发" },
+            { cat: "鸽形目", name: "嗉囊炎", emoji: "🫙", symp: "嗉囊积食胀气、呕吐酸臭液体、食欲废绝。", note: "先停食，温生理盐水轻轻冲洗，由专业人员处理。", risk: "鸽类常见" },
+            { cat: "鸽形目", name: "鸽衣原体病（鸟疫）", emoji: "🦠", symp: "眼鼻分泌物、呼吸困难、拉稀、眼睑肿胀。", note: "衣原体可传染人（类似鹦鹉热），接触必须戴手套。", risk: "⚠️ 可人畜共患", img: "chlamydiosis.jpg" },
+            // ---- 雀形目（鸣禽） ----
+            { cat: "雀形目", name: "皮肤型禽痘", emoji: "🎈", symp: "头颈裸露皮肤出现灰黄色结节，麻雀、山雀多见。", note: "自限性疾病，防继发感染，保持环境干燥卫生。", risk: "雀形目常见", img: "fowlpox.jpg" },
+            { cat: "雀形目", name: "气囊螨", emoji: "🫁", symp: "呼吸杂音、打喷嚏、张口呼吸、尾羽上下摆动。", note: "鸣禽多见，可经密切接触传播，需兽医驱虫。", risk: "鸣禽高发", img: "airsacmite.jpg" },
+            { cat: "雀形目", name: "鸣禽球虫病", emoji: "🦠", symp: "血便、脱羽、精神差，雏鸟易衰竭死亡。", note: "食谷鸟群聚处（喂鸟点）易传播，及时清理粪便。", risk: "雏鸟高发", img: "coccidiosis.jpg" },
+            { cat: "雀形目", name: "喙畸形症（AKD）", emoji: "🦜", symp: "嘴喙过度生长、弯曲变形，无法正常取食理羽。", note: "乌鸦等雀形目有报道，需专业修剪并辅助饲喂。", risk: "罕见" },
+            { cat: "雀形目", name: "聚集性沙门氏菌病", emoji: "🧫", symp: "冬季食谷鸟群聚处出现腹泻、虚弱、猝死。", note: "喂鸟器具勤清洗消毒，发现病鸟及时隔离上报。", risk: "⚠️ 季节性", img: "salmonella.jpg" },
+            // ---- 雁形目（水禽） ----
+            { cat: "雁形目", name: "鸭瘟（鸭病毒性肠炎）", emoji: "🦆", symp: "头颈肿大、出血性肠炎、排绿色稀便、高死亡率。", note: "急性高传染，病死率高，隔离病鸭并上报。", risk: "⚠️ 高死亡", img: "duckenteritis.jpg" },
+            { cat: "雁形目", name: "鸭疫里默氏杆菌病", emoji: "🦆", symp: "雏鸭眼鼻分泌物、共济失调、跛行、神经症状。", note: "多见于育雏期，注意密度、垫料卫生。", risk: "雏鸭高发" },
+            { cat: "雁形目", name: "肉毒杆菌中毒", emoji: "🧪", symp: "「软脖子病」——颈肌麻痹、翅下垂、瘫软伏地。", note: "夏季浅水区高发，及时捞除病死个体，防二次中毒。", risk: "⚠️ 群发", img: "botulism.jpg" },
+            { cat: "雁形目", name: "禽流感（水禽携带型）", emoji: "🦢", symp: "水禽常无症状或轻微，却是重要携带与传播库。", note: "接触水禽栖息水域做好防护，勿惊扰野鸭群。", risk: "⚠️ 人畜共患", img: "avian-influenza.jpg" },
+            { cat: "雁形目", name: "鸭病毒性肝炎", emoji: "🦆", symp: "雏鸭角弓反张、抽搐、急性死亡。", note: "雏鸭期暴发，传染迅速，靠疫苗预防。", risk: "雏鸭高发", img: "duckhepatitis.jpg" },
+            // ---- 猛禽类 ----
+            { cat: "猛禽类", name: "曲霉病", emoji: "🍄", symp: "呼吸困难、张口喘气、消瘦、运动不耐受。", note: "猛禽头号杀手，源于环境霉菌（霉变垫料），需抗真菌治疗。", risk: "⚠️ 高致死", img: "aspergillosis.jpg" },
+            { cat: "猛禽类", name: "铅中毒（二次中毒）", emoji: "🔫", symp: "神经症状、站立不稳、绿便、虚弱。", note: "多因捕食被铅弹猎杀的猎物所致，勿投喂来源不明肉食。", risk: "⚠️ 紧急" },
+            { cat: "猛禽类", name: "足垫炎（Bumblefoot）", emoji: "🦶", symp: "脚垫红肿、化脓、跛行、不愿站立。", note: "笼养猛禽常见，与栖木过硬有关，需外科清创。", risk: "笼养常见" },
+            { cat: "猛禽类", name: "应激性羽毛损伤", emoji: "🪶", symp: "拔羽、断羽、自我啄伤。", note: "圈养/过度打扰导致，改善环境、减少惊扰。", risk: "圈养应激" },
+            // ---- 雉鸡类（家禽） ----
+            { cat: "雉鸡类", name: "马立克氏病", emoji: "🐔", symp: "神经麻痹、单腿拖行、翅膀下垂、内脏肿瘤。", note: "鸡类常见肿瘤病，疫苗可预防，无特效药。", risk: "鸡类高发", img: "marek.jpg" },
+            { cat: "雉鸡类", name: "新城疫", emoji: "🧠", symp: "呼吸困难、歪头、绿便，家禽高传染。", note: "急性高死亡，严格隔离并上报畜牧部门。", risk: "⚠️ 高传染", img: "newcastle.jpg" },
+            { cat: "雉鸡类", name: "禽霍乱（巴氏杆菌病）", emoji: "🦠", symp: "急性高热、口鼻流血样黏液、突然死亡。", note: "可传染人畜，处理病死禽戴手套、彻底消毒。", risk: "⚠️ 可人畜共患", img: "fowlcholera.jpg" },
+            { cat: "雉鸡类", name: "支原体病（慢性呼吸道病）", emoji: "🫁", symp: "打喷嚏、流鼻涕、气囊炎啰音、病程长。", note: "慢性呼吸道病，种源净化与通风很关键。", risk: "常见", img: "mycoplasmosis.jpg" }
+        ];
+
+        // ---------- 渲染 ----------
+        var commonGrid = document.getElementById("common-grid");
+        var moreZone = document.getElementById("more-zone");
+        var moreBtn = document.getElementById("more-btn");
+        var tabsEl = document.getElementById("disease-tabs");
+        var moreGrid = document.getElementById("disease-grid");
+
+        var currentGroup = "鸽形目";
+        var expanded = false;
+
+        function renderCommon() {
+            commonGrid.innerHTML = COMMON.map(diseaseCard).join("");
+        }
+
+        function renderTabs() {
+            var html = "";
+            GROUPS.forEach(function (g) {
+                var count = MORE.filter(function (d) { return d.cat === g.key; }).length;
+                html += '<button class="cat-tab' + (g.key === currentGroup ? " active" : "") + '" data-cat="' + g.key + '">' + g.label + ' <em>' + count + '</em></button>';
+            });
+            tabsEl.innerHTML = html;
+        }
+
+        function renderGroup() {
+            var list = MORE.filter(function (d) { return d.cat === currentGroup; });
+            moreGrid.innerHTML = list.map(diseaseCard).join("");
+        }
+
+        tabsEl.addEventListener("click", function (e) {
+            var btn = e.target.closest(".cat-tab");
+            if (!btn) return;
+            currentGroup = btn.getAttribute("data-cat");
+            var tabs = tabsEl.querySelectorAll(".cat-tab");
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.toggle("active", tabs[i] === btn);
+            }
+            renderGroup();
+        });
+
+        moreBtn.addEventListener("click", function () {
+            expanded = !expanded;
+            moreZone.classList.toggle("open", expanded);
+            moreBtn.textContent = expanded ? "📂 收起更多病状" : "📂 更多病状 · 按鸟种分类查看";
+            if (expanded) {
+                renderTabs();
+                renderGroup();
+            }
+        });
+
+        renderCommon();
+
+        // 查看/关闭病例图：点击按钮切换显示状态
+        document.addEventListener("click", function (e) {
+            var btn = e.target.closest(".d-img-btn");
+            if (!btn) return;
+            var wrap = btn.closest(".d-img-wrap");
+            if (!wrap) return;
+            if (wrap.classList.contains("show")) {
+                wrap.classList.remove("show");
+                btn.innerHTML = "🖼️ 查看真实病例图（⚠️ 可能引起不适）";
+            } else {
+                wrap.classList.add("show");
+                btn.innerHTML = "🙈 关闭图片";
+            }
+        });
+
+    })();
+    </script>
+
+    <footer>
+        <p>BirdCloud.Library 鸟云图书馆 © 2026</p>
+    </footer>
+    <script src="bg-feathers.js"></script>
+</body>
+</html>
